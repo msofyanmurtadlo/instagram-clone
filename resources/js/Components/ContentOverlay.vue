@@ -13,7 +13,7 @@ let isHover = ref(false)
 <template>
     <div @mouseenter="$event => isHover = true" @mouseleave="$event => isHover = false"
         class="flex items-center justify-center cursor-pointer relative">
-        <div v-if="isHover ? 'bg-black bg-opacity-40' : ''"
+        <div v-if="isHover" :class="isHover ? 'bg-black bg-opacity-40' : ''"
             class="absolute w-full h-full z-50 flex items-center justify-around text-lg font-extrabold text-white">
             <div class="flex items-center justify-around w-[50%]">
                 <div class="flex items-center justify-center">
