@@ -25,7 +25,7 @@ const createPostfunc = () => {
     error.value.text = null
     error.value.file = null
 
-    router.post('/post', form, {
+    router.post('/posts', form, {
         forceFormData: true,
         preserveScroll: true,
         onError: () => {
@@ -69,7 +69,8 @@ const closeOverlay = () => {
             <div class="flex items-center justify-between w-full rounded-t-xl p-3 border-b border-b-gray-300">
                 <ArrowLeft fillColor="#000000" :size="30" @click="$event => closeOverlay()" class="cursor-pointer" />
                 <div class="text-lg font-extrabold">New reel</div>
-                <button class="text-lg text-blue-500 hover:text-gray-900 font-extrabold">Share</button>
+                <button @click="$event => createPostfunc()"
+                    class="text-lg text-blue-500 hover:text-gray-900 font-extrabold">Share</button>
             </div>
             <div class="w-full md:flex h-[calc(100%-55px)] rounded-xl overflow-auto">
                 <div class="flex items-center bg-gray-100 w-full h-full overflow-hidden">
