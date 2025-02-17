@@ -27,6 +27,65 @@ onMounted(() => {
         wWidth.value = window.innerWidth;
     });
 });
+
+
+const addComment = (object) => {
+    router.post('/comments', {
+        post_id: object.post.id,
+        user_id: object.user.id,
+        comment: object.comment
+    }, {
+        onFinish: () => updatePost(object)
+    })
+}
+
+const deleteFunc = (object) => {
+    let url = ''
+    if (object.deleteType === 'Post') {
+        url = '/posts/' + object.id
+    } else {
+        url = '/comments/' + object.id
+    }
+
+    router.delete(url, {
+        onFinish: () => updatePost(object)
+    })
+    if (object.deleteType === 'Post') {
+        openOverlay.value = false
+    }
+}
+
+const updateLike = (object) => {
+    let deleteLike = false
+    let id = null
+    for (let i = 0; i < object.post.likes.length; i++) {
+        const like = object.post.likes[i];
+        if (like.user_id === object.user.id && like.post_id === object.post.id) {
+            deleteLike = true
+            id = like.id
+        }
+    }
+    if (deleteLike) {
+        router.delete('/likes/' + id, {
+            onFinish: () => updatePost(object)
+        })
+    } else {
+        router.post('/likes', {
+            post_id: object.post.id,
+        }, {
+            onFinish: () => updatePost(object)
+        })
+    }
+}
+
+const updatePost = (object) => {
+    for (let i = 0; i < posts.value.data.length; i++) {
+        const post = posts.value.data[i];
+        if (post.id === object.post.id) {
+            currentPost.value = post
+        }
+    }
+}
 </script>
 
 <template>
@@ -40,7 +99,7 @@ onMounted(() => {
                     <Link :href="route('users.show', { id: slide.id })"
                         class="relative mx-auto text-center mt-4 px-2 cursor-pointer">
                     <div
-                        class="absolute z-[-1] -top-[5px] left-[4px] rounded-full rotate-45 w-[64px] h-[64px]  contrast-[1.3] bg-gradient-to-t from-yellow-300 to-purple-500 via-red-500">
+                        class=" absolute z-[-1] -top-[5px] left-[4px] rounded-full rotate-45 w-[64px] h-[64px]  contrast-[1.3] bg-gradient-to-t from-yellow-300 to-purple-500 via-red-500">
                         <div class="rounded-full ml-[3px] mt-[3px] w-[58px] h-[58px] bg-white"></div>
                     </div>
                     <img class="rounded-full w-[56px] h-[56px] -mt-[1px]" :src="slide.file">
@@ -69,7 +128,7 @@ onMounted(() => {
                 <div class="bg-black rounded-lg w-full min-h-[400px] flex items-center">
                     <img class="mx-auto w-full" :src="post.file">
                 </div>
-                <LikesSection :post="post" @like="$event => updateLikes($event)" />
+                <LikesSection :post="post" @like="$event => updateLike($event)" />
                 <div class="text-black font-extrabold py-1">{{ post.likes.length }} likes</div>
                 <div>
                     <span class="text-black font-extrabold">{{ post.user.name }}</span>
@@ -78,11 +137,13 @@ onMounted(() => {
                 <button @click="currentPost = post; openOverlay = true" class="text-gray-500 font-extrabold py-1">
                     view all {{ post.comments.length }} comments
                 </button>
-                <div class="pb-20"></div>
+                <div class="pb-2"></div>
             </div>
         </div>
     </MainLayout>
-    <ShowPostOverlay v-if="openOverlay" :post="currentPost" @closeOverlay="$emit => openOverlay = false" />
+    <ShowPostOverlay v-if="openOverlay" :post="currentPost" @closeOverlay="$emit => openOverlay = false"
+        @addComment="$event => addComment($event)" @updateLike="$event => updateLike($event)"
+        @deleteSelected="deleteFunc($event)" />
 </template>
 
 

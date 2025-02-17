@@ -12,6 +12,7 @@ import EmoticonHappyOutline from "vue-material-design-icons/EmoticonHappyOutline
 let comment = ref('')
 let deleteType = ref(null)
 let id = ref(null)
+let textarea = ref(null)
 
 const user = usePage().props.auth.user
 
@@ -93,7 +94,7 @@ const textareaInput = (e) => {
                             placeholder="Add a comment..." rows="1"
                             class="w-full border-0 mt-2 mb-2 text-sm z-50 focus:ring-0 text-gray-600 text-[18px]"></textarea>
                         <button v-if="comment" class="text-blue-600  font-extrabold pr-4"
-                            @click="$$emit('addComment', { post, user, comment }); comment = ''">
+                            @click="$emit('addComment', { post, user, comment }); comment = ''">
                             Post
                         </button>
                     </div>

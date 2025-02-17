@@ -41,6 +41,6 @@ class UserController extends Controller
         ]);
         $user = (new FileService)->updateFile(auth()->user(), $request, 'user');
         $user->save();
-        return redirect()->route('user.show', ['id' => auth()->user()->id]);
+        return redirect()->route('users.show', ['id' => auth()->user()->id]);
     }
 }
