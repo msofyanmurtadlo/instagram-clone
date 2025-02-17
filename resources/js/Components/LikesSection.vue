@@ -12,7 +12,7 @@ const props = defineProps(['post'])
 const { post } = toRefs(props)
 
 const emit = defineEmits(['like'])
-// const user = usePage().props.auth.user
+const user = usePage().props.auth.user
 
 </script>
 <template>
